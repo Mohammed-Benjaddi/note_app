@@ -72,7 +72,6 @@ function checker() {
     
     if (notesList.children.length === 0 && arrNotes.length === 0) {
         window.localStorage.clear();
-        console.log('its cleared');
         while (main.firstChild) {
             main.removeChild(main.firstChild)
         }
@@ -83,7 +82,6 @@ function checker() {
 
         main.appendChild(paragraph)
     } else {
-        console.log('else');
         notesItems = notesList.childNodes
 
         notesItems.forEach(note => {
