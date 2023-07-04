@@ -1,3 +1,0 @@
-# note app
-
-## project notes

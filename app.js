@@ -1,13 +1,27 @@
-let notesList = document.querySelector('.notes-list')
-let addNoteBtn = document.querySelector('.add-note')
-let saveNoteBtn = document.querySelector('.save-note')
-let main = document.querySelector('.main')
-let arrNotes = []
-let notesItems = []
-let allIds = new Set();
-let currentNoteId;
+let notesList = document.querySelector('.notes-list'),
+    addNoteBtn = document.querySelector('.add-note'),
+    saveNoteBtn = document.querySelector('.save-note'),
+    main = document.querySelector('.main'),
+    bars = document.querySelector('.bars'),
+    arrNotes = [],
+    notesItems = [],
+    allIds = new Set(),
+    currentNoteId;
 
 checker()
+
+
+bars.addEventListener('click', () => {
+    if (bars.classList.contains('active')) {
+        bars.classList.remove('active')
+        document.querySelector('.container').classList.remove('menu-isActive')
+        document.querySelector('aside').classList.remove('menu-isActive')
+    } else {
+        bars.classList.add('active')
+        document.querySelector('.container').classList.add('menu-isActive')
+        document.querySelector('aside').classList.add('menu-isActive')
+    }
+})
 
 function checker() {
     if (notesList.children.length === 0 && window.localStorage.getItem('notes')) {
@@ -29,7 +43,7 @@ function checker() {
                 textArea = document.createElement('textarea')
 
                 titleArea.placeholder = 'Title'
-                textArea.placeholder = 'Write Your Note Here'
+                textArea.placeholder = 'Start Writing'
 
                 titleArea.className = 'title-area'
                 textArea.className = 'text-area'
@@ -95,11 +109,22 @@ function checker() {
                 let titleArea = document.querySelector('.title-area')
                 let textArea = document.querySelector('.text-area')
 
+                textArea.focus()
+
                 for (let i = 0; i < arrNotes.length; i++) {
                     if (arrNotes[i].id === note.id) {
                         titleArea.value = arrNotes[i].title
                         textArea.value = arrNotes[i].value
                     }
+                }
+
+                if (window.innerWidth < 767) {
+                    if (bars.classList.contains('active')) {
+                        bars.classList.remove('active')
+                        document.querySelector('.container').classList.remove('menu-isActive')
+                        document.querySelector('aside').classList.remove('menu-isActive')
+                    }
+
                 }
             })
         });
@@ -123,8 +148,8 @@ addNoteBtn.onclick = () => {
     let title = document.createElement('h4')
     let someContent = document.createElement('p')
     let icon = document.createElement('i')
-    let titleArea,
-        textArea
+    let titleArea = document.querySelector('.title-area')
+    let textArea = document.querySelector('.text-area')
     let noteId = generateId()
 
     if (notesList.children.length === 0) {
@@ -132,11 +157,11 @@ addNoteBtn.onclick = () => {
             main.removeChild(main.childNodes[i])
         }
 
-        titleArea = document.createElement('textarea')
-        textArea = document.createElement('textarea')
+        let titleArea = document.createElement('textarea')
+        let textArea = document.createElement('textarea')
 
         titleArea.placeholder = 'Title'
-        textArea.placeholder = 'Write Your Note Here'
+        textArea.placeholder = 'Start Writing'
 
         titleArea.className = 'title-area'
         textArea.className = 'text-area'
@@ -174,13 +199,37 @@ addNoteBtn.onclick = () => {
     notesList.appendChild(note)
     arrNotes.push(noteObj)
 
+
+    notesItems.forEach(prevNote => {
+        prevNote.className = ''
+    })
+    note.classList.add('active')
+    currentNoteId = note.id
+
+    titleArea.focus()
+
+
+    for (let i = 0; i < arrNotes.length; i++) {
+        if (arrNotes[i].id === note.id) {
+            console.log('title: ', arrNotes[i].title);
+            console.log('title: ', arrNotes[i].value);
+            titleArea.value = arrNotes[i].title
+            textArea.value = arrNotes[i].value
+        }
+    }
+
+
     checker()
 }
 
 // this function works when you delete a note
 function removeNote(event) {
-    let parentElement = event.target.parentElement
-    let newArray = []
+    let parentElement = event.target.parentElement,
+        newArray = [],
+        lastNote;
+
+    let titleArea = document.querySelector('.title-area')
+    let textArea = document.querySelector('.text-area')
 
     for (let i = 0; i < arrNotes.length; i++) {
         if (arrNotes[i].id === parentElement.id) {
@@ -199,7 +248,18 @@ function removeNote(event) {
     window.localStorage.clear();
     window.localStorage.setItem('notes', JSON.stringify(arrNotes))
 
+    // --------------------------------------------------------------
     checker()
+
+    lastNote = arrNotes[arrNotes.length - 1]
+    titleArea.value = lastNote.title
+    textArea.value = lastNote.value
+    currentNoteId = lastNote.id
+
+    console.log('currentNoteId: ', currentNoteId);
+
+    setActiveNote(currentNoteId)
+
 }
 
 // when you save notes this function works
@@ -229,3 +289,14 @@ saveNoteBtn.addEventListener('click', () => {
     }
     window.localStorage.setItem('notes', JSON.stringify(arrNotes))
 })
+
+async function setActiveNote(id) {
+    for (let i = 0; i < notesList.childElementCount; i++) {
+        const element = notesList.children[i];
+        if (element.id === id) {
+            element.setAttribute('isActive', true)
+        } else {
+            element.classList.remove('active')
+        }
+    }
+}
