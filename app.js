@@ -20,23 +20,23 @@ function checker() {
             let icon = document.createElement('i')
             let titleArea,
                 textArea
-            
+
             if (notesList.children.length === 0) {
                 for (let i = 0; i < main.childNodes.length; i++) {
                     main.removeChild(main.childNodes[i])
                 }
                 titleArea = document.createElement('textarea')
                 textArea = document.createElement('textarea')
-    
+
                 titleArea.placeholder = 'Title'
                 textArea.placeholder = 'Write Your Note Here'
-    
+
                 titleArea.className = 'title-area'
                 textArea.className = 'text-area'
-    
+
                 titleArea.id = 'title-area'
                 textArea.id = 'text-area'
-    
+
                 main.appendChild(titleArea)
                 main.appendChild(textArea)
             }
@@ -44,32 +44,32 @@ function checker() {
             title.className = 'title'
             someContent.className = 'some-content'
             icon.className = 'fas fa-trash remove-btn'
-        
+
             note.id = `${notes[i].id}`
             icon.id = `${notes[i].id}`
-        
+
             icon.onclick = removeNote
-        
+
             title.textContent = notes[i].title
             someContent.textContent = notes[i].someContent
-            
+
             let noteObj = {
                 title: notes[i].title,
                 value: notes[i].value,
                 someContent: notes[i].someContent,
                 id: note.id
             }
-        
+
             note.appendChild(title)
             note.appendChild(someContent)
             note.appendChild(icon)
-        
+
             notesList.appendChild(note)
             arrNotes.push(noteObj)
         }
     }
-    
-    
+
+
     if (notesList.children.length === 0 && arrNotes.length === 0) {
         window.localStorage.clear();
         while (main.firstChild) {
@@ -106,9 +106,10 @@ function checker() {
     }
 }
 
+// function generates ids for notes
 function generateId() {
     let randomNumber = Math.floor(Math.random() * 100)
-    
+
     while (allIds.has(randomNumber)) {
         randomNumber = Math.floor(Math.random() * 100)
     }
@@ -116,6 +117,7 @@ function generateId() {
     return randomNumber
 }
 
+// this function works when you add new note
 addNoteBtn.onclick = () => {
     let note = document.createElement('li')
     let title = document.createElement('h4')
@@ -124,7 +126,7 @@ addNoteBtn.onclick = () => {
     let titleArea,
         textArea
     let noteId = generateId()
-    
+
     if (notesList.children.length === 0) {
         for (let i = 0; i < main.childNodes.length; i++) {
             main.removeChild(main.childNodes[i])
@@ -171,15 +173,16 @@ addNoteBtn.onclick = () => {
 
     notesList.appendChild(note)
     arrNotes.push(noteObj)
-    
+
     checker()
 }
 
+// this function works when you delete a note
 function removeNote(event) {
     let parentElement = event.target.parentElement
     let newArray = []
 
-    for (let i = 0; i <arrNotes.length; i++) {
+    for (let i = 0; i < arrNotes.length; i++) {
         if (arrNotes[i].id === parentElement.id) {
             continue
         } else {
@@ -199,6 +202,7 @@ function removeNote(event) {
     checker()
 }
 
+// when you save notes this function works
 saveNoteBtn.addEventListener('click', () => {
     let titleArea = document.querySelector('.title-area'),
         textArea = document.querySelector('.text-area')
