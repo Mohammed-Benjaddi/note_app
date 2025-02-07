@@ -170,25 +170,27 @@ textarea {
 .btns {
     display: flex;
     gap: 10px;
-    width: 100px;
-    height: 40px;
+    /* width: 100px; */
+    /* height: 40px; */
     position: absolute;
     top: 20px;
     right: 20px;
 }
 
 .add-note,
-.save-note {
+.save-note,
+.dlt-note {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #ECEFF4;
-    width: 60px;
-    height: 40px;
+    padding: 10px 15px;
     cursor: pointer;
     border: 1px solid black;
-    border-radius: 2px;
+    border-radius: 5px;
     position: relative;
+    white-space: nowrap;
+    transition: all .2s;
 }
 
 .btn-hover {
@@ -222,7 +224,8 @@ textarea {
 }
 
 .add-note:hover,
-.save-note:hover {
+.save-note:hover,
+.dlt-note:hover {
     background-color: #dadcdf;
 }
 
